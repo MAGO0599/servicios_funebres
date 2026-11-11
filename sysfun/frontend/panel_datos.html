@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Datos - Servicios Funebres</title>
+    <link rel="icon" type="image/x-icon" href="../../img/sf_favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="../../img/sf_favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../../img/sf_favicon-32x32.png" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- MENÚ SUPERIOR -->
+    <nav class="top-nav">
+    <div class="logo">
+        <i class="fas fa-cross"></i>
+        <span>Sistema Funebre</span>
+    </div>
+    
+    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <ul class="nav-links" id="navLinks">
+        <li><a href="panel_datos.html"><i class="fas fa-home"></i> <span class="nav-text">Panel de Datos</span></a></li>
+        <li><a href="solicitudes.html"><i class="fas fa-file-alt"></i> <span class="nav-text">Solicitudes</span></a></li>
+        <li><a href="empleados.html"><i class="fas fa-users"></i> <span class="nav-text">Empleados</span></a></li>
+        <li><a href="ataudes.html"><i class="fas fa-box"></i> <span class="nav-text">Ataúdes</span></a></li>
+        <li><a href="vehiculos.html"><i class="fas fa-truck"></i> <span class="nav-text">Vehículos</span></a></li>
+        <li><a href="proveedores.html"><i class="fas fa-building"></i> <span class="nav-text">Proveedores</span></a></li>
+        <li><a href="reportes.html"><i class="fas fa-chart-bar"></i> <span class="nav-text">Reportes</span></a></li>
+        <li><a href="configuracion_sitio.html"><i class="fas fa-cog"></i> <span class="nav-text">Configuración</span></a></li>
+    </ul>
+    
+    <div class="user-menu">
+        <a href="perfil.html" id="userProfileLink" title="Mi Perfil" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; transition: background 0.3s;">
+            <i class="fas fa-user-circle" style="font-size: 18px;"></i>
+            <span id="userName">Usuario</span>
+        </a>
+        <button class="btn-logout" id="btnLogout" title="Cerrar Sesión">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Cerrar Sesión</span>
+        </button>
+    </div>
+</nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="page-header">
+            <div class="header-left">
+                <h1> Panel de Datos</h1>
+                <p>Bienvenido de vuelta, <span id="userNameHeader">Usuario</span></p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-success" onclick="window.location.href='nueva_sol.html'">
+                    <i class="fas fa-plus"></i> Nueva Solicitud
+                </button>
+                <button class="btn btn-secondary" onclick="window.location.href='reportes.html'">
+                    <i class="fas fa-file-export"></i> Exportar
+                </button>
+            </div>
+        </header>
+
+        <!-- Filtros -->
+        <div class="filter-bar">
+            <label><i class="fas fa-calendar-alt"></i> Período:</label>
+            <input type="date" id="filtroFechaInicio">
+            <span>a</span>
+            <input type="date" id="filtroFechaFin">
+            <select id="filtroEstado">
+                <option value="">Todos los estados</option>
+                <option value="PENDIENTE">Pendiente</option>
+                <option value="EN_REVISION">En Revisión</option>
+                <option value="ASIGNADO">Asignado</option>
+                <option value="COMPLETADO">Completado</option>
+                <option value="ANULADO">Anulado</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="aplicarFiltros()">
+                <i class="fas fa-search"></i> Filtrar
+            </button>
+            <button class="btn btn-sm" style="background:#e2e8f0;color:#4a5568;" onclick="limpiarFiltros()">
+                <i class="fas fa-undo"></i> Limpiar
+            </button>
+        </div>
+
+        <!-- Stats Principales -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="fas fa-file-alt"></i></div>
+                <div class="stat-info">
+                    <h3 id="totalSolicitudes">0</h3>
+                    <p>Total Solicitudes</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon yellow"><i class="fas fa-clock"></i></div>
+                <div class="stat-info">
+                    <h3 id="solicitudesPendientes">0</h3>
+                    <p>Pendientes</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-info">
+                    <h3 id="solicitudesCompletadas">0</h3>
+                    <p>Completadas</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="stat-info">
+                    <h3 id="stockCritico">0</h3>
+                    <p>Stock Crítico</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Secundarios -->
+        <div class="stats-grid-2">
+            <div class="stat-card-mini">
+                <span class="stat-icon stat-icon-purple"><i class="fas fa-users"></i></span>
+                <div class="stat-number" id="totalEmpleados">0</div>
+                <div class="stat-label">Empleados Activos</div>
+            </div>
+            <div class="stat-card-mini">
+                <span class="stat-icon stat-icon-blue"><i class="fas fa-truck"></i></span>
+                <div class="stat-number" id="totalVehiculos">0</div>
+                <div class="stat-label">Vehículos Disponibles</div>
+            </div>
+            <div class="stat-card-mini">
+                <span class="stat-icon stat-icon-green"><i class="fas fa-box"></i></span>
+                <div class="stat-number" id="totalAtaudes">0</div>
+                <div class="stat-label">Ataúdes en Stock</div>
+            </div>
+            <div class="stat-card-mini">
+                <span class="stat-icon stat-icon-orange"><i class="fas fa-building"></i></span>
+                <div class="stat-number" id="totalProveedores">0</div>
+                <div class="stat-label">Proveedores</div>
+            </div>
+            <div class="stat-card-mini">
+                <span class="stat-icon stat-icon-red"><i class="fas fa-file-invoice"></i></span>
+                <div class="stat-number" id="totalServicios">0</div>
+                <div class="stat-label">Servicios Realizados</div>
+            </div>
+            <div class="stat-card-mini">
+                <span class="stat-icon stat-icon-teal"><i class="fas fa-percent"></i></span>
+                <div class="stat-number" id="tasaEficiencia">0%</div>
+                <div class="stat-label">Tasa de Eficiencia</div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3><i class="fas fa-chart-pie"></i> Solicitudes por Estado</h3>
+                <canvas id="chartEstados"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3><i class="fas fa-chart-bar"></i> Estado del Stock</h3>
+                <canvas id="chartStock"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3><i class="fas fa-chart-line"></i> Evolución Mensual</h3>
+                <canvas id="chartMensual"></canvas>
+            </div>
+        </div>
+
+        <!-- Tabla de solicitudes recientes -->
+        <div class="table-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <h2><i class="fas fa-list"></i> Solicitudes Recientes</h2>
+                <a href="solicitudes.html" style="color: #3498db; text-decoration: none; font-size: 14px;">
+                    Ver todas <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nº Pedido</th>
+                            <th>Fallecido</th>
+                            <th>Responsable</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaSolicitudes">
+                        <!-- Se llena con JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

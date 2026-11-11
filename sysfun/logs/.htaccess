@@ -1,0 +1,6 @@
+# sysfun/logs/.htaccess
+# Denegar todo acceso a archivos de log
+<FilesMatch "\.(log)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

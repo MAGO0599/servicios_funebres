@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ataúdes - Servicios Funebres</title>
+    <link rel="icon" type="image/x-icon" href="../../img/sf_favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="../../img/sf_favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../../img/sf_favicon-32x32.png" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<nav class="top-nav">
+    <div class="logo">
+        <i class="fas fa-cross"></i>
+        <span>Sistema Funebre</span>
+    </div>
+    
+    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <ul class="nav-links" id="navLinks">
+        <li><a href="panel_datos.html"><i class="fas fa-home"></i> <span class="nav-text">Panel de Datos</span></a></li>
+        <li><a href="solicitudes.html"><i class="fas fa-file-alt"></i> <span class="nav-text">Solicitudes</span></a></li>
+        <li><a href="empleados.html"><i class="fas fa-users"></i> <span class="nav-text">Empleados</span></a></li>
+        <li><a href="ataudes.html"><i class="fas fa-box"></i> <span class="nav-text">Ataúdes</span></a></li>
+        <li><a href="vehiculos.html"><i class="fas fa-truck"></i> <span class="nav-text">Vehículos</span></a></li>
+        <li><a href="proveedores.html"><i class="fas fa-building"></i> <span class="nav-text">Proveedores</span></a></li>
+        <li><a href="reportes.html"><i class="fas fa-chart-bar"></i> <span class="nav-text">Reportes</span></a></li>
+        <li><a href="configuracion_sitio.html"><i class="fas fa-cog"></i> <span class="nav-text">Configuración</span></a></li>
+    </ul>
+    
+    <div class="user-menu">
+        <a href="perfil.html" id="userProfileLink" title="Mi Perfil" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; transition: background 0.3s;">
+            <i class="fas fa-user-circle" style="font-size: 18px;"></i>
+            <span id="userName">Usuario</span>
+        </a>
+        <button class="btn-logout" id="btnLogout" title="Cerrar Sesión">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Cerrar Sesión</span>
+        </button>
+    </div>
+</nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="page-header">
+            <div class="header-left">
+                <h1>📦 Gestión de Ataúdes</h1>
+                <p>Listado completo de ataúdes y su stock</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-success" onclick="mostrarFormularioAtaud()">
+                    <i class="fas fa-plus"></i> Nuevo Ataúd
+                </button>
+            </div>
+        </header>
+
+        <!-- Formulario de Ataúdes -->
+        <div id="formContainer" class="form-container hidden">
+            <h2 id="formTitle">Nuevo Ataúd</h2>
+            <form id="ataudForm">
+                <input type="hidden" name="csrf_token" id="csrf_token" value="">
+                <input type="hidden" id="editId" value="">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Código Renglón</label>
+                        <input type="text" id="codigo_renglon" placeholder="Ej: AT-001">
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre *</label>
+                        <input type="text" id="nombre" placeholder="Ej: Modelo Clásico" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Largo (metros) *</label>
+                        <input type="number" id="largo_mts" step="0.01" placeholder="Ej: 2.10" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tiene Chapa</label>
+                        <select id="tiene_chapa">
+                            <option value="0">No</option>
+                            <option value="1">Sí</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Stock Actual *</label>
+                        <input type="number" id="stock_actual" placeholder="Ej: 5" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock Mínimo *</label>
+                        <input type="number" id="stock_minimo" placeholder="Ej: 2" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                    <button type="button" class="btn btn-secondary" onclick="ocultarFormularioEmpleado()"><i class="fas fa-times"></i> Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tabla -->
+        <div class="table-container">
+            <div class="table-header">
+                <h2><i class="fas fa-list"></i> Listado de Ataúdes</h2>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Largo</th>
+                            <th>Chapa</th>
+                            <th>Stock</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaAtaudes">
+                        <!-- Se llena con JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

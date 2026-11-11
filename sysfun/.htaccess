@@ -1,0 +1,27 @@
+# ============================================
+# SEGURIDAD - sysfun/.htaccess
+# ============================================
+
+# 1. Deshabilitar listado de directorios
+Options -Indexes
+
+# 2. Prevenir acceso a archivos sensibles (Sintaxis Apache 2.4)
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "\.(env|log|ini|sh|sql|bak|config)$">
+    Require all denied
+</FilesMatch>
+
+# 3. Forzar HTTPS en producción (descomentar cuando esté en servidor real con SSL)
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# 4. Redirigir intentos de acceso directo a archivos HTML del panel hacia el login
+RewriteEngine On
+RewriteCond %{REQUEST_URI} ^/sysfun/frontend/.*\.html$ [NC]
+RewriteCond %{REQUEST_URI} !/sysfun/frontend/login\.html$ [NC]
+# Descomenta la siguiente línea cuando tengas la validación de sesión en PHP lista:
+# RewriteRule ^(.*)$ /sysfun/frontend/login.html [R=302,L]

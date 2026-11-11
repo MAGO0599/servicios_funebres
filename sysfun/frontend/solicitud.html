@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Solicitud - Servicios Funebres</title>
+    <link rel="icon" type="image/x-icon" href="../../img/sf_favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="../../img/sf_favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../../img/sf_favicon-32x32.png" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/solicitud.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+     <!-- MENÚ SUPERIOR -->
+    <nav class="top-nav">
+    <div class="logo">
+        <i class="fas fa-cross"></i>
+        <span>Sistema Funebre</span>
+    </div>
+    
+    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <ul class="nav-links" id="navLinks">
+        <li><a href="panel_datos.html"><i class="fas fa-home"></i> <span class="nav-text">Panel de Datos</span></a></li>
+        <li><a href="solicitudes.html"><i class="fas fa-file-alt"></i> <span class="nav-text">Solicitudes</span></a></li>
+        <li><a href="empleados.html"><i class="fas fa-users"></i> <span class="nav-text">Empleados</span></a></li>
+        <li><a href="ataudes.html"><i class="fas fa-box"></i> <span class="nav-text">Ataúdes</span></a></li>
+        <li><a href="vehiculos.html"><i class="fas fa-truck"></i> <span class="nav-text">Vehículos</span></a></li>
+        <li><a href="proveedores.html"><i class="fas fa-building"></i> <span class="nav-text">Proveedores</span></a></li>
+        <li><a href="reportes.html"><i class="fas fa-chart-bar"></i> <span class="nav-text">Reportes</span></a></li>
+        <li><a href="configuracion_sitio.html"><i class="fas fa-cog"></i> <span class="nav-text">Configuración</span></a></li>
+    
+    <div class="user-menu">
+        <a href="perfil.html" id="userProfileLink" title="Mi Perfil" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; transition: background 0.3s;">
+            <i class="fas fa-user-circle" style="font-size: 18px;"></i>
+            <span id="userName">Usuario</span>
+        </a>
+        <button class="btn-logout" id="btnLogout" title="Cerrar Sesión">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Cerrar Sesión</span>
+        </button>
+    </div>
+</nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+        <header class="page-header">
+            <div class="header-left">
+                <h1>📄 Detalle de Solicitud <span id="nroPedido"></span></h1>
+                <p>Información completa de la solicitud</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="window.location.href='solicitudes.html'">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </button>
+                <button class="btn btn-primary" onclick="editarSolicitudDetalle()" id="btnEditar">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+            </div>
+        </header>
+
+        <!-- Formulario de edición -->
+        <div id="formContainer" class="form-container hidden">
+            <h2>✏️ Editar Solicitud</h2>
+            <form id="solicitudForm">
+                <input type="hidden" name="csrf_token" id="csrf_token" value="">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Estado</label>
+                        <select id="estado">
+                            <option value="PENDIENTE">Pendiente</option>
+                            <option value="EN_REVISION">En Revisión</option>
+                            <option value="ASIGNADO">Asignado</option>
+                            <option value="EN_EJECUCION">En Ejecución</option>
+                            <option value="COMPLETADO">Completado</option>
+                            <option value="ANULADO">Anulado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Ataúd Asignado</label>
+                        <select id="id_ataud_asignado">
+                            <option value="">Sin asignar...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Vehículo Asignado</label>
+                        <select id="id_vehiculo_asignado">
+                            <option value="">Sin asignar...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Chofer Asignado</label>
+                        <select id="id_chofer_asignado">
+                            <option value="">Sin asignar...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Observaciones</label>
+                        <textarea id="observaciones" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar Cambios</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelarEdicion()"><i class="fas fa-times"></i> Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Detalle -->
+        <div id="detalleContainer">
+            <div class="detalle-grid">
+                <div class="detalle-card">
+                    <h3><i class="fas fa-info-circle"></i> Información General</h3>
+                    <div class="detalle-item"><span class="label">N° Pedido:</span><span id="det_nro_pedido" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">Fecha Solicitud:</span><span id="det_fecha" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">Estado:</span><span id="det_estado" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">Tipo Servicio:</span><span id="det_tipo" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">Origen:</span><span id="det_origen" class="value"></span></div>
+                </div>
+
+                <div class="detalle-card">
+                    <h3><i class="fas fa-user-injured"></i> Datos del Fallecido</h3>
+                    <div class="detalle-item"><span class="label">Nombre:</span><span id="det_fallecido" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">DNI:</span><span id="det_fallecido_dni" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">Fecha Fallecimiento:</span><span id="det_fecha_fallecimiento" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">Departamento:</span><span id="det_departamento" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">Domicilio:</span><span id="det_domicilio" class="value"></span></div>
+                </div>
+
+                <div class="detalle-card">
+                    <h3><i class="fas fa-user"></i> Datos del Responsable</h3>
+                    <div class="detalle-item"><span class="label">Nombre:</span><span id="det_responsable" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">DNI:</span><span id="det_responsable_dni" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">Teléfono:</span><span id="det_responsable_telefono" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">Email:</span><span id="det_responsable_email" class="value"></span></div>
+                </div>
+
+                <div class="detalle-card">
+                    <h3><i class="fas fa-tasks"></i> Asignaciones</h3>
+                    <div class="detalle-item"><span class="label">Ataúd:</span><span id="det_ataud" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">Vehículo:</span><span id="det_vehiculo" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">Chofer:</span><span id="det_chofer" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">Procesado por:</span><span id="det_procesado" class="value"></span></div>
+                </div>
+
+                <div class="detalle-card">
+                    <h3><i class="fas fa-file"></i> Documentos</h3>
+                    <div class="detalle-item"><span class="label">Cert. Defunción:</span><span id="det_certificado" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">DNI Fallecido:</span><span id="det_dni_fallecido" class="value"></span></div>
+                    <div class="detalle-item"><span class="label">Docs Extra:</span><span id="det_docs_extra" class="value"></span></div>
+                </div>
+
+                <div class="detalle-card full-width">
+                    <h3><i class="fas fa-comment"></i> Observaciones</h3>
+                    <div id="det_observaciones" class="observaciones-text"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
